@@ -125,6 +125,28 @@ char* concat(char *s1, char *s2)
   strcat(result, s2);
   return result;
 }
+void part4(tok_t *input,char * filename,char * c){
+int newfd;
+ 
+ if(c == ">"){
+  //printf("PART 4\n");
+  if ((newfd = open(filename, O_CREAT|O_WRONLY | O_APPEND, 0644)) < 0) {
+	perror(input);
+	exit(1);
+  }
+ 
+ dup2(newfd, 1);
+ close(newfd);
+ }
+ if(c == "<"){
+  if ((newfd = open(filename, O_RDONLY, 0644)) < 0) {
+	perror(input);
+	exit(1);
+  }
+ dup2(newfd,0);
+ close(newfd);
+ }
+}
 
 int shell (int argc, char *argv[]) {
   char *s = malloc(INPUT_STRING_SIZE+1);			/* user input string */
@@ -151,7 +173,19 @@ int shell (int argc, char *argv[]) {
     
     if( pid == 0 ){ // child process
       
-      
+      int i;
+         for(i=0;i<MAXTOKS && t[i];i++){
+		 if (strcmp( t[i], ">") == 0){
+	 	  t[i]=NULL;
+		  //printf("hello");
+		  part4(t,t[i+1],">");	
+                  }
+		if (strcmp( t[i], "<") == 0){
+	 	  t[i]=NULL;
+		  //printf("hello");
+		  part4(t,t[i+1],"<");	
+                  }
+		}
       char *poi=getenv("PATH");
       tok_t * pois = getToks(poi);
       int i;
@@ -173,9 +207,9 @@ int shell (int argc, char *argv[]) {
       exit( EXIT_FAILURE );    
     }
   }
- 
+  lineNum++;
   wait(NULL);
-   lineNum++;
+  
   fprintf(stdout, "%d: %s :", lineNum, getcwd(cwd,sizeof(cwd)));
   }
   return 0;
