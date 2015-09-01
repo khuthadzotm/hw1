@@ -149,10 +149,10 @@ int shell (int argc, char *argv[]) {
   else {
     pid = fork(); 
     
-    //if( pid == 0 ){ // child process
+    if( pid == 0 ){ // child process
       
       
-      /*char *poi=getenv("PATH");
+      char *poi=getenv("PATH");
       tok_t * pois = getToks(poi);
       int i;
       for(i = 0;i<MAXTOKS && pois[i];i++){
@@ -163,7 +163,7 @@ int shell (int argc, char *argv[]) {
           execve(fi,t, NULL);
         }
         //perror(*t);
-      }*/
+      }
       execv(*t,t);
       perror(*t);
       exit(0);
