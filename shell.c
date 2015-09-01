@@ -99,7 +99,17 @@ void init_shell()
  */
 void add_process(process* p)
 {
-  /** YOUR CODE HERE */
+  
+  if(first_process == NULL)
+    first_process = p;
+  else{
+   process *tmp = first_process;
+   while(tmp->next != NULL)
+    	tmp = tmp->next;
+   tmp->next = p;
+   p->prev = tmp;
+   
+ }
 }
 
 /**
