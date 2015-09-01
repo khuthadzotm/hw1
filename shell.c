@@ -8,6 +8,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <stdbool.h>
+#include<fcntl.h>
 
 #define INPUT_STRING_SIZE 80
 
@@ -106,15 +107,29 @@ void add_process(process* p)
  */
 process* create_process(char* inputString)
 {
+
+
   pid_t tcpid;
   pid_t pid = getpid(); // get pid of the current process ...
   // printf( "Parent pid: %d\n", pid ); // ... and print it out
   pid_t cpid;
   pid_t mypid;
+    //printf(inputString);
+    tok_t *t;
+     t = getToks(inputString);
+    process *new;
+    new = malloc(sizeof(process));
+    new->argv = t;
+    int i ,n =0;
+    for(i =0; i <MAXTOKS && t[i]; i++)
+      n++;
+    new->argc = n; 
+    
+  return new;
+
   
   
-  /** YOUR CODE HERE */
-  return NULL;
+  
 }
 
 char* concat(char *s1, char *s2)
@@ -188,7 +203,7 @@ int shell (int argc, char *argv[]) {
 		}
       char *poi=getenv("PATH");
       tok_t * pois = getToks(poi);
-      int i;
+     
       for(i = 0;i<MAXTOKS && pois[i];i++){
         //char *( char *pois, *t);
         char *fi=concat(pois[i],"/");
